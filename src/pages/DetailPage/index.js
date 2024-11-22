@@ -1,61 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { apiService } from "../../app/apiServices";
-import { Box, Chip, Stack, Typography } from "@mui/material";
+import { Box, Skeleton } from "@mui/material";
 import ItemDetail from "../../components/ItemDetail";
+import RecommendationList from "../../components/RecommendationList";
 
 function DetailPage({ type }) {
   let { itemId } = useParams();
   // Handle item detail
-  const [itemDetail, setItemDetail] = React.useState("");
-  const [itemDetailLoading, setItemDetailLoading] = React.useState(false);
-  const [itemDetailError, setItemDetailError] = React.useState("");
+  const [itemDetail, setItemDetail] = useState(null);
+  // const [itemDetailLoading, setItemDetailLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    // setItemDetailLoading(true);
+    setItemDetail(null);
     const getDetail = async () => {
-      setItemDetailLoading(true);
       try {
-        let queryUrl = "";
-        type === "movie"
-          ? (queryUrl = `/movie/${itemId}`)
-          : (queryUrl = `/tv/${itemId}`);
+        const queryUrl =
+          type === "movie" ? `/movie/${itemId}` : `/tv/${itemId}`;
         const res = await apiService.get(queryUrl);
         const results = res.data;
-        console.log(results);
         setItemDetail(results);
-        setItemDetailError("");
+        // if (results) {
+        //   setItemDetailLoading(false);
+        // }
       } catch (error) {
         console.log(error);
-        setItemDetailError(error.message);
       }
-      setItemDetailLoading(false);
     };
     getDetail();
   }, [type, itemId]);
 
+  //console.log("loading: ", itemDetailLoading);
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      {!itemDetail ? (
+        <Box sx={{ padding: "20px" }}>
+          <Skeleton
+            animation="wave"
+            width="100%"
+            height="700px"
+            variant="rounded"
+            sx={{ marginBottom: "10px" }}
+          />
+          <Skeleton
+            animation="wave"
+            width="100%"
+            height="200px"
+            variant="rounded"
+          />
+        </Box>
+      ) : (
         <Box
           sx={{
-            width: "1300px",
-            paddingTop: "30px",
-            paddingBottom: "50px",
-            paddingLeft: "40px",
-            paddingRight: "40px",
+            display: "flex",
+            justifyContent: "center",
+            width: "100%",
+            overflow: "hidden",
           }}
         >
-          <Typography variant="h6">
-            DetailPage: {type} - {itemId} -{" "}
-            {itemDetail.title || itemDetail.name}
-          </Typography>
-
-          <ItemDetail itemDetail={itemDetail} />
-          <Box>
-            <Typography>Recommendations</Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+            <ItemDetail itemDetail={itemDetail} type={type} />
+            <RecommendationList genres={itemDetail.genres} type={type} />
           </Box>
         </Box>
-      </Box>
+      )}
     </>
   );
 }

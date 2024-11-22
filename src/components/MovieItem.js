@@ -1,15 +1,24 @@
 import React from "react";
 import { Box, Card, Grid2, Typography } from "@mui/material";
 import CircularWithValueLabel from "./CircularProgressWithLabel";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
+import EmptyImg from "../assets/empty.png";
 
 function MovieItem({ movie, type }) {
   const movieScore = (movie.vote_average * 10).toFixed();
+  const movieImg = movie.poster_path
+    ? `https://media.themoviedb.org/t/p/w440_and_h660_face${movie.poster_path}`
+    : movie.backdrop_path
+    ? `https://media.themoviedb.org/t/p/w440_and_h660_face${movie.backdrop_path}`
+    : EmptyImg;
+
   return (
     <Grid2
       key={movie.id}
       sx={{
-        width: { xs: "50%", sm: "25%", md: "150px" },
+        width: { xs: "40%", sm: "40%", md: "150px" },
+        display: "flex",
+        justifyContent: "center",
       }}
     >
       <Card
@@ -17,14 +26,15 @@ function MovieItem({ movie, type }) {
           boxShadow: "none",
           background: "none",
           position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <Link to={`/${type}/${movie.id}`}>
           <Box
             component="img"
-            src={`https://media.themoviedb.org/t/p/w440_and_h660_face/${
-              movie.poster_path || movie.backdrop_path
-            }`}
+            src={movieImg}
             alt="movie.title"
             sx={{
               height: "225px",
@@ -38,6 +48,9 @@ function MovieItem({ movie, type }) {
             paddingTop: "26px",
             paddingLeft: "10px",
             paddingRight: "10px",
+            display: "flex",
+            flexDirection: "column",
+            width: "150px",
           }}
         >
           <Link
@@ -61,7 +74,7 @@ function MovieItem({ movie, type }) {
             {movie.release_date ?? movie.first_air_date}
           </Typography>
         </Box>
-        <CircularWithValueLabel value={movieScore} />
+        <CircularWithValueLabel value={movieScore} top="206px" />
       </Card>
     </Grid2>
   );

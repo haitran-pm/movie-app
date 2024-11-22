@@ -1,6 +1,6 @@
 import * as React from "react";
 import { apiService } from "../../app/apiServices";
-import { Avatar, Grid2, Skeleton, Typography } from "@mui/material";
+import { Grid2, Skeleton, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import {
@@ -45,11 +45,8 @@ function HomePage() {
   // Handle trending block
   const [trendingTab, setTrendingTab] = React.useState("day");
   const [trendingMovies, setTrendingMovies] = React.useState([]);
-  const [trendingLoading, setTrendingLoading] = React.useState(false);
-  const [trendingError, setTrendingError] = React.useState("");
   React.useEffect(() => {
     const getMovies = async () => {
-      setTrendingLoading(true);
       try {
         let queryUrl = "";
         trendingTab === "day"
@@ -57,12 +54,9 @@ function HomePage() {
           : (queryUrl = "/trending/all/week");
         const res = await apiService.get(queryUrl);
         setTrendingMovies(res.data.results);
-        setTrendingError("");
       } catch (error) {
         console.log(error);
-        setTrendingError(error.message);
       }
-      setTrendingLoading(false);
     };
     getMovies();
   }, [trendingTab]);
@@ -76,11 +70,8 @@ function HomePage() {
   const [trailerBackdrop, setTrailerBackdrop] = React.useState("");
   const [latestTab, setLatestTab] = React.useState("now");
   const [latestMovies, setLatestMovies] = React.useState([]);
-  const [latestLoading, setLatestLoading] = React.useState(false);
-  const [latestError, setLatestError] = React.useState("");
   React.useEffect(() => {
     const getMovies = async () => {
-      setLatestLoading(true);
       try {
         let queryUrl = "";
         latestTab === "now"
@@ -89,15 +80,12 @@ function HomePage() {
         const res = await apiService.get(queryUrl);
         const results = res.data.results;
         setLatestMovies(results);
-        setLatestError("");
         setTrailerBackdrop(
           results[Math.floor(Math.random() * results.length)].backdrop_path
         );
       } catch (error) {
         console.log(error);
-        setLatestError(error.message);
       }
-      setLatestLoading(false);
     };
     getMovies();
   }, [latestTab]);
@@ -107,21 +95,15 @@ function HomePage() {
 
   // Handle what's popular block
   const [popularShows, setPopularShows] = React.useState([]);
-  const [showLoading, setShowLoading] = React.useState(false);
-  const [showError, setShowError] = React.useState("");
   React.useEffect(() => {
     const getShows = async () => {
-      setShowLoading(true);
       try {
         let queryUrl = "/tv/top_rated";
         const res = await apiService.get(queryUrl);
         setPopularShows(res.data.results);
-        setShowError("");
       } catch (error) {
         console.log(error);
-        setShowError(error.message);
       }
-      setShowLoading(false);
     };
     getShows();
   }, []);
@@ -234,17 +216,22 @@ function HomePage() {
               Millions of movies, TV shows and people to discover. Explore now.
             </Typography>
             <Box sx={{ position: "relative", mt: "30px" }}>
-              <StyledInputBase
-                placeholder="Search for a movie, tv show, person......"
-                inputProps={{ "aria-label": "search" }}
-              />
-              <StyledSearchButton>Search</StyledSearchButton>
+              <form method="get" action="/search">
+                <StyledInputBase
+                  placeholder="Search for a movie, tv show, person......"
+                  inputProps={{ "aria-label": "search" }}
+                  name="keyword"
+                />
+                <StyledSearchButton type="submit">Search</StyledSearchButton>
+              </form>
             </Box>
           </HomeBanner>
         )}
       </Container>
       <StyledSectionTrending disableGutters maxWidth={false}>
-        <StyledHeadline>
+        <StyledHeadline
+          sx={{ flexDirection: { xs: "column", sm: "row", md: "row" } }}
+        >
           <Typography variant="h2" sx={{ fontSize: "24px", fontWeight: 600 }}>
             Trending
           </Typography>
@@ -280,7 +267,10 @@ function HomePage() {
         maxWidth={false}
         background={`https://image.tmdb.org/t/p/w1920_and_h600_multi_faces_filter(duotone,060915,103b36)${trailerBackdrop}`}
       >
-        <StyledHeadline darktheme="true">
+        <StyledHeadline
+          darktheme="true"
+          sx={{ flexDirection: { xs: "column", sm: "row", md: "row" } }}
+        >
           <Typography variant="h2" sx={{ fontSize: "24px", fontWeight: 600 }}>
             Latest Trailers
           </Typography>

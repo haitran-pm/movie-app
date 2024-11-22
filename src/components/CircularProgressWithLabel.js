@@ -8,7 +8,7 @@ function CircularProgressWithLabel(props) {
     <Box
       sx={{
         position: "absolute",
-        top: "206px",
+        top: `${props.top}`,
         left: "10px",
         zIndex: 50,
         padding: "2px",
@@ -32,11 +32,9 @@ function CircularProgressWithLabel(props) {
       <CircularProgress
         variant="determinate"
         thickness={2.3}
-        size={36}
+        size={40}
         sx={{
           color: "rgba(255,255,255,0.15)",
-          width: "36px",
-          height: "36px",
           position: "absolute",
         }}
         value={100}
@@ -74,6 +72,8 @@ function CircularProgressWithLabel(props) {
   );
 }
 
-export default function CircularWithValueLabel({ value }) {
-  return <CircularProgressWithLabel value={parseInt(value)} />;
+export default function CircularWithValueLabel({ value, top, size }) {
+  return (
+    <CircularProgressWithLabel value={parseInt(value)} top={top} size={size} />
+  );
 }

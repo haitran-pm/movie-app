@@ -11,15 +11,17 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import logo from "../assets/logo.svg";
 import Stack from "@mui/material/Stack";
-import AddIcon from "@mui/icons-material/Add";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SearchIcon from "@mui/icons-material/Search";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Link } from "react-router-dom";
+import {
+  StyledInputBase,
+  StyledSearchButton,
+} from "../pages/HomePage/styled-component";
 
 const pages = [
   { name: "Movies", link: "/movies" },
   { name: "TV Shows", link: "/shows" },
-  { name: "Peoples", link: "/peoples" },
 ];
 
 function Header() {
@@ -30,6 +32,7 @@ function Header() {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+  const [searchClicked, setSearchClicked] = React.useState(false);
 
   return (
     <AppBar position="static" elevation={0}>
@@ -38,7 +41,7 @@ function Header() {
         sx={{ maxWidth: "1300px", pl: "40px", pr: "40px" }}
         maxWidth={false}
       >
-        <Toolbar disableGutters>
+        <Toolbar disableGutters sx={{ height: "64px" }}>
           <Box component={Link} to="/" display="flex">
             <Box
               component="img"
@@ -140,13 +143,13 @@ function Header() {
             >
               EN
             </Button> */}
-            <Button
+            {/* <Button
               size="small"
               sx={{ color: "white", fontSize: "16px", mr: "8px", gap: "8px" }}
             >
               <AccountCircleOutlinedIcon fontSize="small" />
               Login
-            </Button>
+            </Button> */}
             {/* <Button
               size="small"
               sx={{
@@ -161,12 +164,45 @@ function Header() {
               size="small"
               sx={{ ml: "16px", color: "white" }}
               aria-label="Create"
+              onClick={() => {
+                setSearchClicked(!searchClicked);
+              }}
             >
-              <SearchIcon sx={{ color: "#06b4e4" }} />
+              {searchClicked ? (
+                <CloseRoundedIcon sx={{ color: "#f00" }} />
+              ) : (
+                <SearchIcon sx={{ color: "#06b4e4" }} />
+              )}
             </IconButton>
           </Stack>
         </Toolbar>
       </Container>
+      {searchClicked && (
+        <Box
+          sx={{
+            width: "100%",
+            height: "auto",
+            padding: "10px",
+            background: "#fff",
+            color: "#000",
+            position: "absolute",
+            top: "64px",
+            zIndex: "100",
+            boxShadow: "0px 5px 10px 0px rgba(0,0,0,0.25)",
+          }}
+        >
+          <Box sx={{ position: "relative" }}>
+            <form method="get" action="/search">
+              <StyledInputBase
+                placeholder="Search for a movie, tv show, person......"
+                inputProps={{ "aria-label": "search" }}
+                name="keyword"
+              />
+              <StyledSearchButton type="submit">Search</StyledSearchButton>
+            </form>
+          </Box>
+        </Box>
+      )}
     </AppBar>
   );
 }

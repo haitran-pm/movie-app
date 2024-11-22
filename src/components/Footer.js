@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Button, Stack, Typography, Container } from "@mui/material";
 import List from "@mui/material/List";
-import ListItemText from "@mui/material/ListItemText";
 import ListItem from "@mui/material/ListItem";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
@@ -37,13 +36,17 @@ function Footer() {
         sx={{ maxWidth: "1300px", pl: "40px", pr: "40px" }}
         maxWidth={false}
       >
-        <Stack direction="row" spacing={6} sx={{ justifyContent: "center" }}>
+        <Stack
+          direction={{ xs: "column", sm: "column", md: "row" }}
+          spacing={6}
+          sx={{ justifyContent: "center" }}
+        >
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "end",
-              alignItems: "end",
+              alignItems: { xs: "start", sm: "start", md: "end" },
               position: "relative",
             }}
           >
@@ -53,7 +56,7 @@ function Footer() {
               alt="The Movie Database"
               sx={{
                 width: "170px",
-                position: "absolute",
+                position: { xs: "relative", sm: "relative", md: "absolute" },
                 top: "-30px",
                 right: "0",
               }}

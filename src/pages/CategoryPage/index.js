@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import Skeleton from "@mui/material/Skeleton";
-import { Link, NavLink, useSearchParams, useNavigate } from "react-router-dom";
+import { NavLink, useSearchParams, useNavigate } from "react-router-dom";
 
 function CategoryPage({ type }) {
   const [page, setPage] = React.useState(1);
@@ -17,26 +17,19 @@ function CategoryPage({ type }) {
 
   // Handle genre list
   const [genreList, setGenreList] = React.useState([]);
-  const [genreListLoading, setGenreListLoading] = React.useState(false);
-  const [genreListError, setGenreListError] = React.useState("");
   React.useEffect(() => {
     const getGenres = async () => {
-      setGenreListLoading(true);
       try {
-        let queryUrl = "";
-        type === "movies"
-          ? (queryUrl = "/genre/movie/list")
-          : (queryUrl = "/genre/tv/list");
+        const queryUrl =
+          type === "movies" ? "/genre/movie/list" : "/genre/tv/list";
+
         const res = await apiService.get(queryUrl);
         const results = res.data.genres;
         setGenreList(results);
-        setGenreListError("");
         setPage(1);
       } catch (error) {
         console.log(error);
-        setGenreListError(error.message);
       }
-      setGenreListLoading(false);
     };
     getGenres();
   }, [type]);
@@ -51,7 +44,6 @@ function CategoryPage({ type }) {
   // Handle movie or show list
   const [resultList, setResultList] = useState([]);
   const [resultListLoading, setResultListLoading] = React.useState(false);
-  const [resultListError, setResultListError] = React.useState("");
   const [totalPages, setTotalPages] = useState(1);
   React.useEffect(() => {
     const getResults = async () => {
@@ -69,10 +61,8 @@ function CategoryPage({ type }) {
         const results = res.data.results;
         setResultList(results);
         setTotalPages(res.data.total_pages);
-        setResultListError("");
       } catch (error) {
         console.log(error);
-        setResultListError(error.message);
       }
       setResultListLoading(false);
     };
@@ -101,10 +91,15 @@ function CategoryPage({ type }) {
         </Typography>
 
         <Box
-          sx={{ display: "flex", justifyContent: "space-between", gap: "40px" }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "40px",
+            flexDirection: { xs: "column", sm: "column", md: "row" },
+          }}
         >
           <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Box sx={{ width: "280px" }}>
+            <Box sx={{ width: { xs: "100%", sm: "100%", md: "280px" } }}>
               <Card elevation={3}>
                 <Typography
                   variant="h4"
